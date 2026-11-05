@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "gsd-workflow": {
+      "command": "/Users/itozapata/.nvm/versions/node/v24.2.0/bin/node",
+      "args": [
+        "/Users/itozapata/.nvm/versions/node/v24.2.0/lib/node_modules/@opengsd/gsd-pi/packages/mcp-server/dist/cli.js"
+      ],
+      "cwd": "/Users/itozapata/Documents/gitrepo/child-helpers",
+      "env": {
+        "GSD_CLI_PATH": "/Users/itozapata/.nvm/versions/node/v24.2.0/bin/gsd",
+        "GSD_BIN_PATH": "/Users/itozapata/.nvm/versions/node/v24.2.0/bin/gsd",
+        "GSD_WORKFLOW_EXECUTORS_MODULE": "/Users/itozapata/.gsd/agent/extensions/gsd/tools/workflow-tool-executors.js",
+        "GSD_WORKFLOW_WRITE_GATE_MODULE": "/Users/itozapata/.gsd/agent/extensions/gsd/bootstrap/write-gate.js",
+        "GSD_PERSIST_WRITE_GATE_STATE": "1",
+        "GSD_WORKFLOW_PROJECT_ROOT": "/Users/itozapata/Documents/gitrepo/child-helpers"
+      }
+    },
+    "gsd-browser": {
+      "command": "/Users/itozapata/.nvm/versions/node/v24.2.0/bin/node",
+      "args": [
+        "/Users/itozapata/.nvm/versions/node/v24.2.0/lib/node_modules/@opengsd/gsd-pi/node_modules/@opengsd/gsd-browser/bin/gsd-browser",
+        "mcp",
+        "--session",
+        "gsd-child-helpers-027babd3",
+        "--identity-scope",
+        "project",
+        "--identity-key",
+        "gsd-child-helpers-027babd3",
+        "--identity-project",
+        "gsd-child-helpers-027babd3"
+      ],
+      "cwd": "/Users/itozapata/Documents/gitrepo/child-helpers"
+    }
+  }
+}
