@@ -65,6 +65,23 @@
   svg { width: 100%; height: 96px; display: block; overflow: visible; }
   svg text { font-size: var(--number-size); font-family: inherit; font-weight: 700; fill: var(--ink); }
 
+  /* ---------- self-assessment ---------- */
+  .selfcheck {
+    margin-top: 18px; padding: 14px 18px 16px;
+    border: 2px dashed var(--card-border); border-radius: 14px; background: #fff;
+    break-inside: avoid;
+  }
+  .selfcheck .sc-head { font-size: 22px; font-weight: 800; color: var(--accent); }
+  .selfcheck .sc-sub { font-size: 15px; font-weight: 600; opacity: .7; margin-top: 2px; }
+  .selfcheck .sc-options {
+    display: flex; justify-content: space-around; align-items: center;
+    gap: 24px; margin-top: 16px;
+  }
+  .selfcheck .sc-opt {
+    font-size: 24px; font-weight: 800; text-align: center;
+    padding: 10px 26px; border-radius: 999px; white-space: nowrap;
+  }
+
   footer { text-align: center; font-size: 15px; margin-top: 4px; opacity: .75; }
 
   @media print {
@@ -91,6 +108,15 @@
     </header>
     <p class="hint">Put your finger on the <b>first number</b>. Draw <b>one hop back</b> for each number you take away. Write where you land!</p>
     <div id="problems"></div>
+    <div class="selfcheck">
+      <div class="sc-head">This was:</div>
+      <div class="sc-sub">(circle one)</div>
+      <div class="sc-options">
+        <span class="sc-opt">😊 Easy</span>
+        <span class="sc-opt">🙂 Just Right</span>
+        <span class="sc-opt">😅 Hard</span>
+      </div>
+    </div>
     <footer>⭐ Great hopping! ⭐</footer>
   </div>
 
