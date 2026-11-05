@@ -35,17 +35,17 @@ window.AIDS = [
   {
     title: "10×10 Number Grid",
     description: "Split-cell grid for writing numbers 0–100.",
-    grade: "kindergarten",
+    grade: "grade-1",
     subject: "math",
-    path: "kindergarten/number-grid-10x10.html",
+    path: "grade-1/number-grid-10x10.html",
     tags: ["numbers", "writing", "counting", "grid", "printable"],
   },
   {
     title: "Subtraction Number Lines 1–10",
     description: "Randomized subtraction problems solved by hopping back on a number line.",
-    grade: "kindergarten",
+    grade: "grade-1",
     subject: "math",
-    path: "kindergarten/subtraction-number-line.html",
+    path: "grade-1/subtraction-number-line.html",
     tags: ["subtraction", "number line", "arithmetic", "printable"],
   },
 ];
