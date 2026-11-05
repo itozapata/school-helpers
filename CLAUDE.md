@@ -15,29 +15,38 @@ simple, clear, and kid-friendly.
 
 ### Folder layout
 
-Aids are grouped by subject in top-level folders:
+Aids are grouped **by grade** in top-level folders, so the collection grows
+naturally as the child advances. Subject (math, reading, …) is metadata on each
+aid, not a folder.
 
 ```
 child-helpers/
-├── index.html          # landing page linking to every aid, grouped by subject
-├── handwriting/        # letter tracing, writing lines, stroke practice
-├── math/               # grids, number lines, arithmetic drills, counting
-├── reading/            # sight words, phonics, word families
-├── shapes-colors/      # shapes, coloring, pattern recognition
-└── misc/               # anything that doesn't fit yet (calendars, charts, games)
+├── index.html          # searchable home page (grouped by grade)
+├── content.js          # manifest of every aid — the home page reads this
+├── kindergarten/       # grade folders, one per grade the child has reached
+├── grade-1/
+├── grade-2/
+│   └── …               # standalone HTML aids live directly in the grade folder
+└── …                   # grade-3 … grade-5, added as the child advances
 ```
 
-- **Pick the subject folder** that best matches the aid's learning goal. Create a
-  folder only when the first aid for that subject is added — don't add empty ones.
-  If a new subject emerges (e.g. `science/`), add it here and to the tree above.
+- **Pick the grade folder** that matches the aid's level. Create a grade folder
+  only when the first aid for that grade is added — don't add empty ones. The set
+  of grades is also listed in `content.js` (`window.GRADES`); add new grades there
+  and to the tree above.
 - **File names**: lowercase kebab-case describing the aid, most general word first,
-  e.g. `math/grid-10x10.html`, `handwriting/tracing-uppercase.html`,
-  `reading/sight-words-set-1.html`.
+  e.g. `kindergarten/number-grid-10x10.html`, `grade-1/tracing-uppercase.html`,
+  `grade-2/sight-words-set-1.html`.
 - **Variants** of the same aid (sizes, difficulty levels) live side by side with a
   suffix (`-easy`, `-hard`, `-large`) — or, better, one file with a toggle.
-- **Keep `index.html` current**: whenever an aid is added, renamed, moved, or
-  removed, update the landing page links (one line per aid: title + short
-  description of what it practices).
+- **Keep `content.js` current** — this is the single source of truth for the home
+  page. Whenever an aid is added, renamed, moved, or removed, update its entry in
+  the `AIDS` array (`title`, `description`, `grade`, `subject`, `path`, `tags`).
+  The home page renders and searches the collection from this manifest, so there
+  are no per-aid links to hand-edit in `index.html`.
+- `content.js` is a plain `.js` file (not `.json`) on purpose: a `<script src>`
+  tag loads it even when `index.html` is opened directly from disk (`file://`),
+  where `fetch()` of a local `.json` is blocked. Keep it that way — no build step.
 - Move misplaced files with `git mv` so history is preserved.
 
 ## Conventions

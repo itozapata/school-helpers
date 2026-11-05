@@ -1,20 +1,192 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Child Helpers</title>
 <style>
-  body { font-family: "Trebuchet MS", sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; }
-  h2 { margin-top: 28px; }
-  li { margin: 6px 0; }
+  :root {
+    --bg: #fdfcf8;
+    --ink: #2b2b2b;
+    --muted: #6b6b6b;
+    --accent: #3a7bd5;
+    --card: #ffffff;
+    --border: #e3e0d8;
+    --chip: #eef3fb;
+    --chip-ink: #3a7bd5;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+  header h1 { margin: 0 0 4px; font-size: 2rem; }
+  header p { margin: 0 0 24px; color: var(--muted); }
+
+  .search {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: #fff;
+    outline: none;
+  }
+  .search:focus { border-color: var(--accent); }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 8px; }
+  .chip {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--ink);
+    padding: 6px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .count { color: var(--muted); font-size: 0.9rem; margin: 10px 0 20px; }
+
+  section.grade { margin-top: 28px; }
+  section.grade h2 {
+    font-size: 1.25rem;
+    margin: 0 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--border);
+  }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  a.card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: transform .08s ease, box-shadow .08s ease, border-color .08s ease;
+  }
+  a.card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.07); border-color: var(--accent); }
+  a.card .title { font-weight: bold; font-size: 1.05rem; margin-bottom: 4px; }
+  a.card .desc { color: var(--muted); font-size: 0.92rem; }
+  a.card .subject {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.75rem;
+    background: var(--chip);
+    color: var(--chip-ink);
+    padding: 2px 10px;
+    border-radius: 999px;
+    text-transform: capitalize;
+  }
+  .empty { color: var(--muted); padding: 40px 0; text-align: center; }
 </style>
 </head>
 <body>
-  <h1>Child Helpers</h1>
-  <h2>Math</h2>
-  <ul>
-    <li><a href="grid.html">10×10 Grid</a> — split-cell grid for writing numbers.</li>
-    <li><a href="math/subtraction-number-line.html">Subtraction Number Lines 1–10</a> — randomized subtraction problems solved by hopping back on a number line.</li>
-  </ul>
+  <div class="wrap">
+    <header>
+      <h1>Child Helpers</h1>
+      <p>Printable worksheets and practice pages, organized by grade.</p>
+    </header>
+
+    <input type="search" class="search" id="search" placeholder="Search by title, subject, or keyword…" autocomplete="off" autofocus>
+    <div class="filters" id="filters"></div>
+    <div class="count" id="count"></div>
+
+    <div id="results"></div>
+  </div>
+
+  <script src="content.js"></script>
+  <script>
+    const aids = (window.AIDS || []).slice();
+    const grades = (window.GRADES || []);
+    const gradeLabel = id => (grades.find(g => g.id === id) || {}).label || id;
+    const gradeIndex = id => {
+      const i = grades.findIndex(g => g.id === id);
+      return i === -1 ? 999 : i;
+    };
+
+    const searchEl = document.getElementById('search');
+    const filtersEl = document.getElementById('filters');
+    const resultsEl = document.getElementById('results');
+    const countEl = document.getElementById('count');
+
+    let activeGrade = 'all';
+
+    // Build grade filter chips — only for grades that actually have content.
+    const gradesWithContent = grades.filter(g => aids.some(a => a.grade === g.id));
+    const chips = [{ id: 'all', label: 'All grades' }, ...gradesWithContent];
+    chips.forEach(c => {
+      const chip = document.createElement('button');
+      chip.className = 'chip' + (c.id === 'all' ? ' active' : '');
+      chip.textContent = c.label;
+      chip.dataset.grade = c.id;
+      chip.addEventListener('click', () => {
+        activeGrade = c.id;
+        document.querySelectorAll('.chip').forEach(el => el.classList.toggle('active', el.dataset.grade === c.id));
+        render();
+      });
+      filtersEl.appendChild(chip);
+    });
+
+    function matches(aid, q) {
+      if (!q) return true;
+      const hay = [aid.title, aid.description, aid.subject, gradeLabel(aid.grade), (aid.tags || []).join(' ')]
+        .join(' ').toLowerCase();
+      return q.toLowerCase().split(/\s+/).filter(Boolean).every(term => hay.includes(term));
+    }
+
+    function render() {
+      const q = searchEl.value.trim();
+      const filtered = aids.filter(a => (activeGrade === 'all' || a.grade === activeGrade) && matches(a, q));
+
+      countEl.textContent = filtered.length + (filtered.length === 1 ? ' aid' : ' aids');
+      resultsEl.innerHTML = '';
+
+      if (!filtered.length) {
+        resultsEl.innerHTML = '<div class="empty">No aids match your search.</div>';
+        return;
+      }
+
+      // Group by grade, in grade order.
+      const byGrade = {};
+      filtered.forEach(a => { (byGrade[a.grade] = byGrade[a.grade] || []).push(a); });
+      Object.keys(byGrade)
+        .sort((a, b) => gradeIndex(a) - gradeIndex(b))
+        .forEach(gid => {
+          const section = document.createElement('section');
+          section.className = 'grade';
+          const h2 = document.createElement('h2');
+          h2.textContent = gradeLabel(gid);
+          section.appendChild(h2);
+
+          const cards = document.createElement('div');
+          cards.className = 'cards';
+          byGrade[gid]
+            .sort((a, b) => a.title.localeCompare(b.title))
+            .forEach(a => {
+              const card = document.createElement('a');
+              card.className = 'card';
+              card.href = a.path;
+              card.innerHTML =
+                '<div class="title"></div><div class="desc"></div><span class="subject"></span>';
+              card.querySelector('.title').textContent = a.title;
+              card.querySelector('.desc').textContent = a.description;
+              card.querySelector('.subject').textContent = a.subject;
+              cards.appendChild(card);
+            });
+          section.appendChild(cards);
+          resultsEl.appendChild(section);
+        });
+    }
+
+    searchEl.addEventListener('input', render);
+    render();
+  </script>
 </body>
 </html>
