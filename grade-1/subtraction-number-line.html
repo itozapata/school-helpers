@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Subtraction Number Lines 1–10</title>
+<title>Subtraction Number Lines 0–10</title>
 <style>
   :root {
     --problems: 6;           /* problems per page */
@@ -125,14 +125,14 @@
   </div>
 
 <script>
-  const MIN = 1, MAX = 10;
+  const MIN = 0, MAX = 10;
   const css = getComputedStyle(document.documentElement);
   const COUNT = parseInt(css.getPropertyValue('--problems')) || 10;
     const box = document.getElementById('problems');
   const answersBox = document.getElementById('answers');
   let problems = [];
 
-  // a − b = c with every value (a, b, c) between 1 and 10.
+  // a − b = c with every value (a, b, c) between 0 and 10.
   function makeProblems() {
     const all = [];
     for (let a = MIN + 1; a <= MAX; a++)
@@ -144,7 +144,7 @@
     return all.slice(0, COUNT);
   }
 
-  // Number line 1–10. In answer-key mode, draws the hops back from a to a−b.
+  // Number line 0–10. In answer-key mode, draws the hops back from a to a−b.
   function numberLine(a, b, show) {
     const W = 480, pad = 14, y = 80, step = (W - 2 * pad) / (MAX - MIN);
     const X = n => pad + (n - MIN) * step;

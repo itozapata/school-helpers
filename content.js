@@ -41,7 +41,7 @@ window.AIDS = [
     tags: ["numbers", "writing", "counting", "grid", "printable"],
   },
   {
-    title: "Subtraction Number Lines 1–10",
+    title: "Subtraction Number Lines 0–10",
     description: "Randomized subtraction problems solved by hopping back on a number line.",
     grade: "grade-1",
     subject: "math",
