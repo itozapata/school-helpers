@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Split Grid</title>
+<style>
+  :root {
+    --size: 60px;
+    --border: #333;
+    --split: #ccc;
+  }
+  body {
+    margin: 0;
+    padding: 24px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(10, var(--size));
+    grid-template-rows: repeat(10, var(--size));
+    border: 2px solid var(--border);
+  }
+  .cell {
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  /* light vertical line splitting the square into two halves
+     (a border, not a background, so it survives printing) */
+  .cell::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 1px solid var(--split);
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  @media print {
+    body { padding: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="grid" id="grid"></div>
+  <script>
+    const grid = document.getElementById('grid');
+    for (let i = 0; i < 100; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      grid.appendChild(cell);
+    }
+  </script>
+</body>
+</html>
